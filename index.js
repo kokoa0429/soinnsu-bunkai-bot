@@ -27,7 +27,9 @@ client.on("message", message => {
         if (message.content.startsWith("!i")) {
             const args = message.content.slice(2).trim().split(/ +/)
             if (args[0] === "new") {
-                num.set(channel.id, newNumber(typeof args[1] == "undefined" ? 10000 : !isNaN(args[1]) ? Number(args[1]) > 9007199254740992 || Number(args[1]) <= 2 ? 10000 : Number(args[1]) : 10000))
+                const n = (typeof args[1] == "undefined" || Number(args[1]) > 9007199254740992 || Number(args[1]) <= 4) ? 10000 : Number(args[1])
+                num.set(channel.id, newNumber(n))
+
                 channel.send(num.get(channel.id) + "を素因数分解してください")
                 score.set(channel.id, new Map())
                 gaming.set(channel.id, true)
@@ -123,7 +125,7 @@ client.login(token)
 
 function newNumber(max) {
     for (; ;) {
-        const num = Math.floor(Math.random() * Math.floor(max)) + 2;
+        const num = Math.floor(Math.random() * Math.floor(max) + 2)
         if (isPrimeNumber(num)) {
             continue
         }
@@ -136,12 +138,12 @@ function newNumber(max) {
 function isPrimeNumber(num) {
     if (num === 2) {
         return true;
+    } else if (num % 2 == 0) {
+        return false;
     } else {
-        for (i = 3; i < Math.floor(Math.sqrt(num) + 1); i+=2) {
-
+        for (i = 3; i <= Math.floor(Math.sqrt(num) + 1); i++) {
             if (num % i === 0) {
                 return false;
-                break;
             }
         }
         return true;
