@@ -71,6 +71,12 @@ client.on("message", message => {
                         channel.send(s)
                         gaming.set(channel.id, false)
                         score.set(channel.id, new Map())
+                        
+                        num.set(channel.id, newNumber(10000))
+
+                        channel.send(num.get(channel.id) + "を素因数分解してください")
+                        score.set(channel.id, new Map())
+                        gaming.set(channel.id, true)
                     }
                 }
             }
@@ -114,6 +120,11 @@ client.on("message", message => {
                         channel.send(s)
                         gaming.set(channel.id, false)
                         score.set(channel.id, new Map())
+                        num.set(channel.id, newNumber(10000))
+
+                        channel.send(num.get(channel.id) + "を素因数分解してください")
+                        score.set(channel.id, new Map())
+                        gaming.set(channel.id, true)
                     }
                 }
             }
