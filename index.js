@@ -65,7 +65,7 @@ client.login(token)
 
 function newNumber(max) {
     for (; ;) {
-        const num = Math.floor(Math.random() * Math.floor(max - 2)) + 2;
+        const num = Math.floor(Math.random() * Math.floor(max)) + 2;
         if (isPrimeNumber(num)) {
             continue
         }
@@ -79,17 +79,13 @@ function isPrimeNumber(num) {
     if (num === 2) {
         return true;
     } else {
-
-        for (i = 2; i < (num / 2) + 1; i++) {
+        for (i = 3; i < Math.floor(Math.sqrt(num) + 1); i+=2) {
 
             if (num % i === 0) {
                 return false;
                 break;
             }
-
-            if (i + 1 > (num / 2) + 1) {
-                return true;
-            }
         }
+        return true;
     }
 }
