@@ -7,6 +7,7 @@ const client = new Discord.Client()
 const token = JSON.parse(fs.readFileSync('token.json', 'utf8')).token
 
 let num = new Map()
+let dnum = new Map()
 let score = new Map()
 let gaming = new Map()
 
@@ -24,17 +25,13 @@ client.on("message", message => {
         let channel = message.channel
         let author = message.author.username
 
-        if (message.content.startsWith("!i")) {
-            const args = message.content.slice(2).trim().split(/ +/)
+        if (msg.startsWith("!i")) {
+            console.log(msg)
+            const args = msg.slice(2).trim().split(/ +/)
             if (args[0] === "new") {
-                const n = (typeof args[1] == "undefined" || Number(args[1]) > 9007199254740992 || Number(args[1]) <= 4) ? 10000 : Number(args[1])
-                num.set(channel.id, newNumber(n))
-
-                channel.send(num.get(channel.id) + "を素因数分解してください")
-                score.set(channel.id, new Map())
-                gaming.set(channel.id, true)
+                gameStart(channel, args[1])
             } else if (args[0] === "help") {
-                channel.send("!i new でげーむがかいしできます \n!i [数字]か[数字]で因数分解できます")
+                channel.send("!i new でげーむがかいしできます。!i new [数字]にすると数字以下の合成数でスタートします。 \n!i [数字]か[数字]で因数分解できます")
             }
             else if (!isNaN(args[0]) && gaming.get(channel.id)) {
                 const n = Number(args[0])
@@ -62,31 +59,18 @@ client.on("message", message => {
                         }
                     }
                     if (nnum == 1) {
-                        scoreObj = score.get(channel.id)
-                        // console.log(scoreObj)
-                        s = "ゲームクリアー わーい\n"
-                        for (ss of scoreObj) {
-                            s += ss[0] + ":" + (ss[1]) + "pt \n"
-                        }
-                        channel.send(s)
-                        gaming.set(channel.id, false)
-                        score.set(channel.id, new Map())
-                        
-                        num.set(channel.id, newNumber(10000))
-
-                        channel.send(num.get(channel.id) + "を素因数分解してください")
-                        score.set(channel.id, new Map())
-                        gaming.set(channel.id, true)
+                        gameEnd(channel)
+                        gameStart(channel)
                     }
                 }
-            }
-            else {
+            } else {
                 message.reply("???")
                 return
             }
         } else {
-            const args = message.content.split(/ +/)
+            const args = msg.split(/ +/)
             if (!isNaN(args[0]) && gaming.get(channel.id)) {
+                console.log(msg)
                 const n = Number(args[0])
                 let nnum = num.get(channel.id)
                 if (n <= 1) {
@@ -111,20 +95,8 @@ client.on("message", message => {
                         }
                     }
                     if (nnum == 1) {
-                        scoreObj = score.get(channel.id)
-                        // console.log(scoreObj)
-                        s = "ゲームクリアー わーい\n"
-                        for (ss of scoreObj) {
-                            s += ss[0] + ":" + (ss[1]) + "pt \n"
-                        }
-                        channel.send(s)
-                        gaming.set(channel.id, false)
-                        score.set(channel.id, new Map())
-                        num.set(channel.id, newNumber(10000))
-
-                        channel.send(num.get(channel.id) + "を素因数分解してください")
-                        score.set(channel.id, new Map())
-                        gaming.set(channel.id, true)
+                        gameEnd(channl)
+                        gameStart(channel)
                     }
                 }
             }
@@ -133,6 +105,44 @@ client.on("message", message => {
 })
 
 client.login(token)
+
+function gameStart(channel, max = 10000) {
+    const n = (isNaN(max) || typeof max == "undefined" || Number(max) > 9007199254740992 || Number(max) <= 4) ? 10000 : Number(max)
+    const w = newNumber(n)
+    num.set(channel.id, w)
+    dnum.set(channel.id, w)
+
+    channel.send(num.get(channel.id) + "を素因数分解してください")
+    score.set(channel.id, new Map())
+    gaming.set(channel.id, true)
+}
+
+function gameEnd(channel) {
+    scoreObj = score.get(channel.id)
+
+    s = "ゲームクリアー わーい\n"
+
+    // console.log(scoreObj)
+    let soi = dnum.get(channel.id)
+    s += (soi + " = ")
+    for (i = 2; i <= soi; i++) {
+        if (soi === i) {
+            // console.log("sushi")
+            s += i + "\n";
+        } else
+            if (soi % i === 0) {
+                s += i + " * ";
+                soi /= i;
+                i = 1;
+            }
+    }
+    for (ss of scoreObj) {
+        s += ss[0] + ":" + (ss[1]) + "pt \n"
+    }
+    channel.send(s)
+    gaming.set(channel.id, false)
+    score.set(channel.id, new Map())
+}
 
 function newNumber(max) {
     for (; ;) {
