@@ -1,6 +1,11 @@
 # 素因数分解ゲーム  Bot
 
+## 公式Bot
+
+[ここ](https://discord.com/oauth2/authorize?client_id=765474757041979412&permissions=68608&scope=bot)
+
 ## 環境構築
+`token.json`を`token.json.template`を参考にDiscordトークンを配置してください
 ### ふつうにやるほうほう
 ```bash
 $ git clone https://github.com/kokoa0429/soinnsu-bunkai-bot
