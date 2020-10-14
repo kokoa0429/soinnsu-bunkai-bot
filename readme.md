@@ -1,10 +1,16 @@
 # 素因数分解ゲーム  Bot
 
 ## 環境構築
+### ふつうにやるほうほう
 ```bash
 $ git clone https://github.com/kokoa0429/soinnsu-bunkai-bot
 $ npm i
 $ node index.js
+```
+### docker-compose
+```bash
+$ git clone https://github.com/kokoa0429/soinnsu-bunkai-bot
+$ docker-compose up -d
 ```
 
 ## 使い方
