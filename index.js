@@ -95,7 +95,7 @@ client.on("message", message => {
                         }
                     }
                     if (nnum == 1) {
-                        gameEnd(channl)
+                        gameEnd(channel)
                         gameStart(channel)
                     }
                 }
